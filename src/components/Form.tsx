@@ -1,9 +1,20 @@
 "use client";
 import { useState } from "react";
 
-const Form = () => {
+type FormProps = {
+  setShowForm: (showForm: boolean) => void;
+};
+
+const Form = (props: FormProps) => {
+  const { setShowForm } = props;
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState([""]);
+  const [formData, setFormData] = useState({
+    color: "",
+    description: "",
+    video: "",
+    audio: "",
+    flavor: "",
+  });
 
   const questions = [
     {
@@ -22,40 +33,53 @@ const Form = () => {
       id: 3,
       text: "Record it! Upload a video introducing yourself",
       type: "video",
-      name: "video-answer",
+      name: "video",
     },
     {
       id: 4,
       text: "Record it! Upload a voice note describing the best cookie you ever had",
       type: "audio",
-      name: "audio-answer",
+      name: "audio",
     },
     {
       id: 5,
       text: "What is your favorite flavor?",
       type: "multiple_choice",
       options: ["Chocolate", "Strawberry", "Vanilla", "Hazelnut"],
-      name: "flavor-option",
+      name: "flavor",
     },
   ];
 
-  const handleAnswer = (answer: string) => {
-    setAnswers([...answers, answer]);
+  const handleFormChange = (event: any) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
   const handleFileChange = (event: any) => {
     const file = event.target.files[0];
-    console.log(file);
+    console.log(file.name);
+    // logic for uploading files should be here
+
+    if (event.target.name === "video") {
+      setFormData({
+        ...formData,
+        [event.target.name]: file.name,
+      });
+    } else if (event.target.name === "audio") {
+      setFormData({
+        ...formData,
+        [event.target.name]: file.name,
+      });
+    }
   };
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    console.log(answers);
+    console.log(formData);
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="grid my-6">
+      <div className="grid my-6 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div>
           <label
             htmlFor={questions[currentQuestion].name}
@@ -70,8 +94,9 @@ const Form = () => {
               id={questions[currentQuestion].name}
               className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
               placeholder="Blue"
+              value={formData.color}
               required
-              onChange={(event) => handleAnswer(event.target.value)}
+              onChange={handleFormChange}
             />
           )}
         </div>
@@ -79,10 +104,12 @@ const Form = () => {
           {questions[currentQuestion].type === "long_text" && (
             <textarea
               id={questions[currentQuestion].name}
+              name={questions[currentQuestion].name}
               rows={4}
               className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Describe your ideal destination..."
-              onChange={(event) => handleAnswer(event.target.value)}
+              value={formData.description}
+              onChange={handleFormChange}
             ></textarea>
           )}
         </div>
@@ -91,8 +118,8 @@ const Form = () => {
             <div>
               <input
                 type="file"
-                id="videoFile"
-                name="videoFile"
+                id={questions[currentQuestion].name}
+                name={questions[currentQuestion].name}
                 accept="video/*"
                 onChange={handleFileChange}
               />
@@ -104,8 +131,8 @@ const Form = () => {
             <div>
               <input
                 type="file"
-                id="audioFile"
-                name="audioFile"
+                id={questions[currentQuestion].name}
+                name={questions[currentQuestion].name}
                 accept="audio/*"
                 onChange={handleFileChange}
               />
@@ -117,7 +144,8 @@ const Form = () => {
             <select
               id={questions[currentQuestion].name}
               name={questions[currentQuestion].name}
-              onChange={(event) => handleAnswer(event.target.value)}
+              value={formData.flavor}
+              onChange={handleFormChange}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
               {questions[currentQuestion].options?.map((option, index) => (
@@ -130,6 +158,14 @@ const Form = () => {
         </div>
       </div>
       <div className="flex space-x-3">
+        {currentQuestion === 0 && (
+          <button
+            onClick={() => setShowForm(false)}
+            className="text-center items-center w-full py-2.5 sm:py-3.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+          >
+            Prev: Activity Details
+          </button>
+        )}
         {currentQuestion > 0 && (
           <button
             onClick={() => setCurrentQuestion(currentQuestion - 1)}
