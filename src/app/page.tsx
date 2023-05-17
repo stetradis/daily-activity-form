@@ -15,7 +15,7 @@ export default function Home() {
       <Header />
       <div className="lg:flex">
         <div className="flex items-center mx-auto md:w-[42rem] px-4 md:px-8 xl:px-0">
-          <div className="w-full mt-12">
+          <div className="w-full mt-12 mx-4">
             {!showForm && (
               <div>
                 <h1 className="mb-4 text-2xl font-extrabold tracking-tight text-gray-900 sm:mb-6 leding-tight dark:text-white">

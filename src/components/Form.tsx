@@ -8,6 +8,7 @@ type FormProps = {
 const Form = (props: FormProps) => {
   const { setShowForm } = props;
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [submittedForm, setSubmittedForm] = useState(false);
   const [formData, setFormData] = useState({
     color: "",
     description: "",
@@ -31,13 +32,13 @@ const Form = (props: FormProps) => {
     },
     {
       id: 3,
-      text: "Record it! Upload a video introducing yourself",
+      text: "Upload a video introducing yourself",
       type: "video",
       name: "video",
     },
     {
       id: 4,
-      text: "Record it! Upload a voice note describing the best cookie you ever had",
+      text: "Upload a voice note describing the best cookie you ever had",
       type: "audio",
       name: "audio",
     },
@@ -75,7 +76,17 @@ const Form = (props: FormProps) => {
   const handleSubmit = (event: any) => {
     event.preventDefault();
     console.log(formData);
+    setSubmittedForm(true);
   };
+
+  if (submittedForm) {
+    return (
+      <div>
+        Thank you for completing your daily activity! Your custom recipe has
+        been emailed to you.
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -120,6 +131,7 @@ const Form = (props: FormProps) => {
                 type="file"
                 id={questions[currentQuestion].name}
                 name={questions[currentQuestion].name}
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
                 accept="video/*"
                 onChange={handleFileChange}
               />
@@ -133,6 +145,7 @@ const Form = (props: FormProps) => {
                 type="file"
                 id={questions[currentQuestion].name}
                 name={questions[currentQuestion].name}
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
                 accept="audio/*"
                 onChange={handleFileChange}
               />
@@ -160,6 +173,7 @@ const Form = (props: FormProps) => {
       <div className="flex space-x-3">
         {currentQuestion === 0 && (
           <button
+            type="button"
             onClick={() => setShowForm(false)}
             className="text-center items-center w-full py-2.5 sm:py-3.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
           >
@@ -168,6 +182,7 @@ const Form = (props: FormProps) => {
         )}
         {currentQuestion > 0 && (
           <button
+            type="button"
             onClick={() => setCurrentQuestion(currentQuestion - 1)}
             className="text-center items-center w-full py-2.5 sm:py-3.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
           >
@@ -176,6 +191,7 @@ const Form = (props: FormProps) => {
         )}
         {currentQuestion < questions.length - 1 && (
           <button
+            type="button"
             onClick={() => setCurrentQuestion(currentQuestion + 1)}
             className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 sm:py-3.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
           >
